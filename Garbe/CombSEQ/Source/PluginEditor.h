@@ -9,7 +9,6 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "PluginProcessor.h"
 
 //==============================================================================
 /**
@@ -17,17 +16,23 @@
 class CombSEQAudioProcessorEditor  : public juce::AudioProcessorEditor
 {
 public:
-    CombSEQAudioProcessorEditor (CombSEQAudioProcessor&);
+    typedef juce::AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
+
+    CombSEQAudioProcessorEditor(juce::AudioProcessor& parent, juce::AudioProcessorValueTreeState& vts);
     ~CombSEQAudioProcessorEditor() override;
 
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
 
+
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
-    CombSEQAudioProcessor& audioProcessor;
+    juce::AudioProcessorValueTreeState& state;
+
+    juce::Slider noiseLevelSlider;
+    juce::Label noiseLevelLabel;
+    std::unique_ptr<SliderAttachment> noiseLevelAttachement;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CombSEQAudioProcessorEditor)
 };

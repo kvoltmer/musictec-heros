@@ -9,6 +9,8 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "PluginEditor.h"
+
 
 //==============================================================================
 /**
@@ -31,7 +33,7 @@ public:
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
     //==============================================================================
-    juce::AudioProcessorEditor* createEditor() override;
+    juce::AudioProcessorEditor* createEditor() override { return new CombSEQAudioProcessorEditor(*this, state); }
     bool hasEditor() const override;
 
     //==============================================================================
@@ -53,7 +55,14 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+
 private:
+    juce::Random random;
+
+    juce::AudioProcessorValueTreeState state;
+
+    float previousNoiseLevel;
+    std::atomic<float>* noiseLevelParameter = nullptr;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CombSEQAudioProcessor)
 };

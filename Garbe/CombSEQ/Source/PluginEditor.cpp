@@ -10,11 +10,22 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-CombSEQAudioProcessorEditor::CombSEQAudioProcessorEditor (CombSEQAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
+CombSEQAudioProcessorEditor::CombSEQAudioProcessorEditor(juce::AudioProcessor& parent, juce::AudioProcessorValueTreeState& vts)
+    : AudioProcessorEditor(parent),
+    state(vts)
 {
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
+    addAndMakeVisible(noiseLevelSlider);
+    noiseLevelSlider.setRange(0.0f, 1.0f);
+    noiseLevelSlider.setTextValueSuffix(" Db");
+    noiseLevelAttachement.reset(new SliderAttachment(state, "noiseLevel", noiseLevelSlider));
+    noiseLevelSlider.setTextBoxStyle(juce::Slider::TextBoxLeft, false, 160, noiseLevelSlider.getTextBoxHeight());
+    noiseLevelSlider.setValue(1.0f);
+
+    addAndMakeVisible(noiseLevelLabel);
+    noiseLevelLabel.setText("Level", juce::dontSendNotification);
+    noiseLevelLabel.attachToComponent(&noiseLevelSlider, true);
+
+
     setSize (400, 300);
 }
 
@@ -35,6 +46,6 @@ void CombSEQAudioProcessorEditor::paint (juce::Graphics& g)
 
 void CombSEQAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+    auto sliderLeft = 120;
+    noiseLevelSlider.setBounds(sliderLeft, 20, getWidth() - sliderLeft - 10, 20);
 }
