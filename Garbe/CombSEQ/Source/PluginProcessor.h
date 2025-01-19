@@ -10,6 +10,8 @@
 
 #include <JuceHeader.h>
 #include "PluginEditor.h"
+#include "SinePulse.h"
+#include "DelayProcessor.h"
 
 
 //==============================================================================
@@ -63,6 +65,9 @@ private:
 
     float previousNoiseLevel;
     std::atomic<float>* noiseLevelParameter = nullptr;
+
+    std::unique_ptr<SinePulse> sinePulse;
+    std::unique_ptr<DelayProcessor> delayProcessor;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CombSEQAudioProcessor)
 };

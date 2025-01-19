@@ -24,9 +24,16 @@ CombSEQAudioProcessorEditor::CombSEQAudioProcessorEditor(juce::AudioProcessor& p
     addAndMakeVisible(noiseLevelLabel);
     noiseLevelLabel.setText("Level", juce::dontSendNotification);
     noiseLevelLabel.attachToComponent(&noiseLevelSlider, true);
+    
+    for (size_t i = 0; i < 10; i++) {
+        juce::Slider* newSlider = new juce::Slider();
+        newSlider->setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
+
+        addAndMakeVisible( sliders.add(newSlider) );
+    }
 
 
-    setSize (400, 300);
+    setSize (800, 300);
 }
 
 CombSEQAudioProcessorEditor::~CombSEQAudioProcessorEditor()
@@ -41,11 +48,27 @@ void CombSEQAudioProcessorEditor::paint (juce::Graphics& g)
 
     g.setColour (juce::Colours::white);
     g.setFont (juce::FontOptions (15.0f));
-    g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
+    std::cout << "paint" << std::endl;
+    //g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
 }
-
+#
 void CombSEQAudioProcessorEditor::resized()
 {
-    auto sliderLeft = 120;
-    noiseLevelSlider.setBounds(sliderLeft, 20, getWidth() - sliderLeft - 10, 20);
+    auto bounds = getLocalBounds();
+    juce::FlexBox noiseBox;
+    noiseBox.flexWrap = juce::FlexBox::Wrap::noWrap;
+    noiseBox.justifyContent = juce::FlexBox::JustifyContent::spaceBetween;
+    noiseBox.items.add(juce::FlexItem(noiseLevelSlider).withMinHeight(50.0f).withMinWidth(50.0f).withFlex(1));
+    bounds = bounds.removeFromBottom(bounds.getHeight() / 2);
+    noiseBox.performLayout(bounds);
+
+    juce::FlexBox sliderBox;
+    sliderBox.flexWrap = juce::FlexBox::Wrap::noWrap;
+    sliderBox.justifyContent = juce::FlexBox::JustifyContent::spaceBetween;
+
+    for (auto s : sliders) {
+        sliderBox.items.add(juce::FlexItem(*s).withMinHeight(50.0f).withMinWidth(50.0f).withFlex(1));
+    }
+
+    sliderBox.performLayout(bounds);
 }

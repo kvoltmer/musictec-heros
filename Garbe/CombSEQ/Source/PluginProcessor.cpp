@@ -40,6 +40,11 @@ CombSEQAudioProcessor::CombSEQAudioProcessor() :
 state(*this, nullptr, juce::Identifier("PARAMS"), createParameterLayout())
 {
     noiseLevelParameter = state.getRawParameterValue("noiseLevel");
+
+    sinePulse = std::make_unique<SinePulse> (500.f, 2000) ;
+    delayProcessor = std::make_unique<DelayProcessor> ();
+
+
 }
 
 CombSEQAudioProcessor::~CombSEQAudioProcessor()
@@ -113,6 +118,9 @@ void CombSEQAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 {
     previousNoiseLevel = *noiseLevelParameter;
 
+    sinePulse->prepareToPlay(sampleRate, samplesPerBlock);
+    delayProcessor->prepareToPlay(sampleRate, samplesPerBlock);
+
 }
 
 void CombSEQAudioProcessor::releaseResources()
@@ -160,9 +168,23 @@ void CombSEQAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
     {
         auto* channelData = buffer.getWritePointer (channel);
 
+        if (channel == 0) {
+            for (size_t sample = 0; sample < buffer.getNumSamples(); sample++) {
+                channelData[sample] = sinePulse->gen();
+            }
+        }
+
+        if (channel == 1) {
+            for (size_t sample = 0; sample < buffer.getNumSamples(); sample++) {
+                float data = sinePulse->gen();
+                channelData[sample] = delayProcessor->process(data);
+            }
+        }
+
+        /*
         for (size_t sample = 0; sample < buffer.getNumSamples(); sample++) {
             channelData[sample] = random.nextFloat() * levelScale - level;
-        }
+        }*/
     }
 }
 

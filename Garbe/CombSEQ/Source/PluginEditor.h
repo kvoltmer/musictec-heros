@@ -33,6 +33,8 @@ private:
     juce::Label noiseLevelLabel;
     std::unique_ptr<SliderAttachment> noiseLevelAttachement;
 
+    juce::OwnedArray<juce::Slider> sliders;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CombSEQAudioProcessorEditor)
 };
