@@ -21,6 +21,15 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
                                                                        1.0f);                   // default value
 
     params.push_back(std::move(paramNoiseLevel));
+
+    auto paramDelay = std::make_unique<juce::AudioParameterFloat>("delay",                      // parameterID
+                                                                        "Delay",                // parameter name
+                                                                        0.0f,                   // minimum value
+                                                                        500.0f,                   // maximum value
+                                                                        0.0f);                  // default value
+
+    params.push_back(std::move(paramDelay));
+
     return { params.begin(), params.end() };
 }
 
@@ -40,6 +49,7 @@ CombSEQAudioProcessor::CombSEQAudioProcessor() :
 state(*this, nullptr, juce::Identifier("PARAMS"), createParameterLayout())
 {
     noiseLevelParameter = state.getRawParameterValue("noiseLevel");
+    delayParameter = state.getRawParameterValue("delay");
 
     sinePulse = std::make_unique<SinePulse> (500.f, 2000) ;
     delayProcessor = std::make_unique<DelayProcessor> ();
@@ -119,7 +129,9 @@ void CombSEQAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
     previousNoiseLevel = *noiseLevelParameter;
 
     sinePulse->prepareToPlay(sampleRate, samplesPerBlock);
+
     delayProcessor->prepareToPlay(sampleRate, samplesPerBlock);
+    delayProcessor->setDelay(*delayParameter);
 
 }
 
@@ -149,7 +161,7 @@ bool CombSEQAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
     if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
         return false;
    #endif
-
+    
     return true;
   #endif
 }
@@ -164,21 +176,16 @@ void CombSEQAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
     auto& level = *noiseLevelParameter;
     auto levelScale = level * 2.0f;
 
+    // TODO: Listener?
+    delayProcessor->setDelay(*delayParameter);
+
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
 
-        if (channel == 0) {
-            for (size_t sample = 0; sample < buffer.getNumSamples(); sample++) {
-                channelData[sample] = sinePulse->gen();
-            }
-        }
-
-        if (channel == 1) {
-            for (size_t sample = 0; sample < buffer.getNumSamples(); sample++) {
-                float data = sinePulse->gen();
-                channelData[sample] = delayProcessor->process(data);
-            }
+        for (size_t sample = 0; sample < buffer.getNumSamples(); sample++) {
+            float data = sinePulse->gen();
+            channelData[sample] = delayProcessor->process(data) * level;
         }
 
         /*

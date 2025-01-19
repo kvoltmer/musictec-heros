@@ -41,8 +41,9 @@ int main (int argc, char* argv[])
 
             DelayProcessor del;
             del.prepareToPlay(samplerate, buffersize);
+            del.setDelay(50);
 
-            double seconds = 3;
+            double seconds = 10;
             int sampleCount = seconds * samplerate;
             int iterations = sampleCount / buffersize;
 

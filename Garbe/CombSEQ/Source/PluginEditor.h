@@ -33,6 +33,10 @@ private:
     juce::Label noiseLevelLabel;
     std::unique_ptr<SliderAttachment> noiseLevelAttachement;
 
+    juce::Slider delaySlider;
+    juce::Label delayLabel;
+    std::unique_ptr<SliderAttachment> delayAttachement;
+
     juce::OwnedArray<juce::Slider> sliders;
 
 

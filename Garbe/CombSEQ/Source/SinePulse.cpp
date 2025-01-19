@@ -13,11 +13,10 @@
 
 float SinePulse::gen() 
 {
-    float maxLevel = 0.25f;
-    auto level = maxLevel * currentPulseLevel();
-
-    auto currentSample = (float)std::sin(currentAngle) * level;
+    auto currentSample = (float)std::sin(currentAngle) * currentPulseLevel();
     currentAngle += angleDelta;
+    currentAngle = std::fmod(currentAngle, 2.0f * juce::MathConstants<float>::pi);
+
 
     pulseCounter++;
     if (pulseCounter >= (pulseIntervalMs / 1000) * sr) {
@@ -39,7 +38,7 @@ void SinePulse::updateAngleData(float newFreq) {
     freq = newFreq;
 
     auto cyclesPerSample = newFreq / sr;
-    angleDelta = cyclesPerSample * 2.0 * juce::MathConstants<double>::pi;
+    angleDelta = cyclesPerSample * 2.0f * juce::MathConstants<float>::pi;
 }
 
 float SinePulse::currentPulseLevel() {

@@ -21,10 +21,20 @@ public:
     float process(float in);
     void prepareToPlay(double sampleRate, int samplesPerBlock);
 
-private:
-    std::unique_ptr <juce::AudioBuffer<float>> audioBuffer;
-    int sampleCounter = 0;
+    void setDelay(float delay);
+    float getDelay() { return _delay; };
 
-    double sr = 44100.f;
+private:
+    std::unique_ptr <juce::AudioBuffer<float>> _delayLine;
+
+    int _sampleCounter = 0;
+    float _delay = 0;
+    float _maxDelayMs = 2000.0f;
+
+    // TODO: Fix initial set
+    float _smoothingRate = 0.01f;
+    float _targetDelay = 0.f;
+
+    double _sampleRate = 44100.f;
 };
 

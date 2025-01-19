@@ -66,6 +66,8 @@ private:
     float previousNoiseLevel;
     std::atomic<float>* noiseLevelParameter = nullptr;
 
+    std::atomic<float>* delayParameter = nullptr;
+
     std::unique_ptr<SinePulse> sinePulse;
     std::unique_ptr<DelayProcessor> delayProcessor;
     //==============================================================================

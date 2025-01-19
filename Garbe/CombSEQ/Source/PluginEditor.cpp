@@ -25,13 +25,26 @@ CombSEQAudioProcessorEditor::CombSEQAudioProcessorEditor(juce::AudioProcessor& p
     noiseLevelLabel.setText("Level", juce::dontSendNotification);
     noiseLevelLabel.attachToComponent(&noiseLevelSlider, true);
     
+
+    addAndMakeVisible(delaySlider);
+    delaySlider.setRange(0.0f, 500.0f);
+    delaySlider.setTextValueSuffix(" Ms");
+    delayAttachement.reset(new SliderAttachment(state, "delay", delaySlider));
+    delaySlider.setTextBoxStyle(juce::Slider::TextBoxLeft, false, 160, delaySlider.getTextBoxHeight());
+    delaySlider.setValue(0.0f);
+
+    addAndMakeVisible(delayLabel);
+    delayLabel.setText("Delay", juce::dontSendNotification);
+    delayLabel.attachToComponent(&delaySlider, true);
+
+    /*
     for (size_t i = 0; i < 10; i++) {
         juce::Slider* newSlider = new juce::Slider();
         newSlider->setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
 
         addAndMakeVisible( sliders.add(newSlider) );
     }
-
+    */
 
     setSize (800, 300);
 }
@@ -58,11 +71,13 @@ void CombSEQAudioProcessorEditor::resized()
     juce::FlexBox noiseBox;
     noiseBox.flexWrap = juce::FlexBox::Wrap::noWrap;
     noiseBox.justifyContent = juce::FlexBox::JustifyContent::spaceBetween;
+
     noiseBox.items.add(juce::FlexItem(noiseLevelSlider).withMinHeight(50.0f).withMinWidth(50.0f).withFlex(1));
+    noiseBox.items.add(juce::FlexItem(delaySlider).withMinHeight(50.0f).withMinWidth(50.0f).withFlex(1));
     bounds = bounds.removeFromBottom(bounds.getHeight() / 2);
     noiseBox.performLayout(bounds);
 
-    juce::FlexBox sliderBox;
+    /*  juce::FlexBox sliderBox;
     sliderBox.flexWrap = juce::FlexBox::Wrap::noWrap;
     sliderBox.justifyContent = juce::FlexBox::JustifyContent::spaceBetween;
 
@@ -71,4 +86,6 @@ void CombSEQAudioProcessorEditor::resized()
     }
 
     sliderBox.performLayout(bounds);
+
+    */
 }
