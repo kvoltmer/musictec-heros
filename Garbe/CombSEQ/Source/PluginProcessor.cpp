@@ -52,7 +52,7 @@ state(*this, nullptr, juce::Identifier("PARAMS"), createParameterLayout())
     delayParameter = state.getRawParameterValue("delay");
 
     sinePulse = std::make_unique<SinePulse> (500.f, 2000) ;
-    delayProcessor = std::make_unique<DelayProcessor> ();
+    delayProcessor = std::make_unique<DelayMonoProcessor> ();
 
 
 }

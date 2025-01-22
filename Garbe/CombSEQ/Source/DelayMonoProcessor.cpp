@@ -1,18 +1,17 @@
 /*
   ==============================================================================
 
-    DelayProcessor.cpp
+    DelayMonoProcessor.cpp
     Created: 3 Dec 2024 2:43:28pm
     Author:  ngarb
 
   ==============================================================================
 */
 
-// TODO: Stereo processing?
 
 #include <iostream>
 
-#include "DelayProcessor.h"
+#include "DelayMonoProcessor.h"
 
 inline float cubicInterp(float x, float y0, float y1, float y2, float y3)
 {
@@ -26,11 +25,11 @@ inline float cubicInterp(float x, float y0, float y1, float y2, float y3)
 }
 
 
-DelayProcessor::DelayProcessor()
+DelayMonoProcessor::DelayMonoProcessor()
 {
 }
 
-float DelayProcessor::process(float in) {
+float DelayMonoProcessor::process(float in) {
     auto bufferSize = _delayLine->getNumSamples();
     auto buffPointer = _delayLine->getWritePointer(0);
     buffPointer[_sampleCounter] = in;
@@ -41,10 +40,6 @@ float DelayProcessor::process(float in) {
     
     // Linear smoothing
     _delay += _smoothingRate * (_targetDelay - _delay);
-    //_delay = _targetDelay;
-
-    //int readPos = (_sampleCounter + bufferSize - static_cast<int>(_delay)) % bufferSize;
-    //float delayedValue = buffPointer[readPos];
 
     float readPosition = _sampleCounter + bufferSize - _delay;
     if (readPosition >= bufferSize) {
@@ -67,7 +62,7 @@ float DelayProcessor::process(float in) {
     return delayedValue;
 }
 
-void DelayProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
+void DelayMonoProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
     _sampleRate = sampleRate;
     _delayLine = std::make_unique<juce::AudioBuffer<float>>(1, static_cast<int> (_sampleRate * (_maxDelayMs / 1000)));
@@ -76,7 +71,7 @@ void DelayProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 
 }
 
-void DelayProcessor::setDelay(float newDelayMs) {
+void DelayMonoProcessor::setDelay(float newDelayMs) {
     if (newDelayMs < 0) {
         std::cerr << "Tried to set negative delay value: " << newDelayMs << std::endl;
         _delay = 0;

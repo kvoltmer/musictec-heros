@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    DelayProcessor.h
+    DelayMonoProcessor.h
     Created: 3 Dec 2024 2:43:28pm
     Author:  ngarb
 
@@ -12,11 +12,11 @@
 
 #include <JuceHeader.h>
 
-class DelayProcessor
+class DelayMonoProcessor
 {
 public:
-	DelayProcessor();
-	~DelayProcessor() = default;
+	DelayMonoProcessor();
+	~DelayMonoProcessor() = default;
 
     float process(float in);
     void prepareToPlay(double sampleRate, int samplesPerBlock);
