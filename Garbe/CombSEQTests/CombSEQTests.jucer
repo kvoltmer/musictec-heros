@@ -4,11 +4,15 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
   <MAINGROUP id="nMwwou" name="CombSEQTests">
     <GROUP id="{DB9E40C6-22E2-A017-6209-CF315E55ACFD}" name="Source">
-      <FILE id="s9ruN9" name="DelayProcessor.cpp" compile="1" resource="0"
-            file="../CombSEQ/Source/DelayProcessor.cpp"/>
-      <FILE id="Qm4mZ6" name="DelayProcessor.h" compile="0" resource="0"
-            file="../CombSEQ/Source/DelayProcessor.h"/>
       <FILE id="TEiKFU" name="SinePulse.cpp" compile="1" resource="0" file="../CombSEQ/Source/SinePulse.cpp"/>
+      <FILE id="HUvvQy" name="DelayMonoProcessor.h" compile="0" resource="0"
+            file="../CombSEQ/Source/DelayMonoProcessor.h"/>
+      <FILE id="QWxkmE" name="DelayMultiProcessor.cpp" compile="1" resource="0"
+            file="../CombSEQ/Source/DelayMultiProcessor.cpp"/>
+      <FILE id="iOGfbK" name="DelayMultiProcessor.h" compile="0" resource="0"
+            file="../CombSEQ/Source/DelayMultiProcessor.h"/>
+      <FILE id="isjIFm" name="DelayMonoProcessor.cpp" compile="1" resource="0"
+            file="../CombSEQ/Source/DelayMonoProcessor.cpp"/>
       <FILE id="dv5O59" name="SinePulse.h" compile="0" resource="0" file="../CombSEQ/Source/SinePulse.h"/>
     </GROUP>
     <GROUP id="{274F7848-B6A7-ED94-9752-F6E2AE6D5944}" name="Source">

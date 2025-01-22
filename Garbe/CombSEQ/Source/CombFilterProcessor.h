@@ -1,8 +1,8 @@
 /*
   ==============================================================================
 
-    DelayMultiProcessor.h
-    Created: 21 Jan 2025 4:05:37pm
+    CombFilterProcessor.h
+    Created: 22 Jan 2025 3:04:19pm
     Author:  ngarb
 
   ==============================================================================
@@ -11,27 +11,23 @@
 #pragma once
 
 #include <JuceHeader.h>
+
 #include "DelayMonoProcessor.h"
 
-class DelayMultiProcessor
+class CombFilterProcessor
 {
 public:
-	DelayMultiProcessor(size_t channels);
-	~DelayMultiProcessor() = default;
+    CombFilterProcessor();
+    ~CombFilterProcessor() = default;
 
     void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages);
     void prepareToPlay(double sampleRate, int samplesPerBlock);
 
-    void setChannelCount(unsigned int channelCOunt);
-
-    void setDelay(int channel, float delay);
-    float getDelay() { return _delay; };
+    void setFrequency(float newFrequency);
 
 private:
-    std::vector<std::unique_ptr<DelayMonoProcessor>> _delayChannels;
-    float _delay = 0.f;
-
-    float _sampleRate = 44100.f;
+    double _sampleRate = 44100.0;
     int _bufferSize = 512;
-    int _nDesiredChannels = 2;
+
+    std::unique_ptr<DelayMonoProcessor> _delayProcessor;
 };

@@ -37,6 +37,18 @@ CombSEQAudioProcessorEditor::CombSEQAudioProcessorEditor(juce::AudioProcessor& p
     delayLabel.setText("Delay", juce::dontSendNotification);
     delayLabel.attachToComponent(&delaySlider, true);
 
+
+    addAndMakeVisible(combFreqSlider);
+    combFreqSlider.setRange(0.0f, 20000.0f);
+    combFreqSlider.setTextValueSuffix(" Hz");
+    combFreqAttachement.reset(new SliderAttachment(state, "combFreq", combFreqSlider));
+    combFreqSlider.setTextBoxStyle(juce::Slider::TextBoxLeft, false, 160, combFreqSlider.getTextBoxHeight());
+    combFreqSlider.setValue(500.0f);
+
+    addAndMakeVisible(combFreqLabel);
+    combFreqLabel.setText("Comb Frequency", juce::dontSendNotification);
+    combFreqLabel.attachToComponent(&combFreqSlider, true);
+
     /*
     for (size_t i = 0; i < 10; i++) {
         juce::Slider* newSlider = new juce::Slider();
@@ -69,11 +81,12 @@ void CombSEQAudioProcessorEditor::resized()
 {
     auto bounds = getLocalBounds();
     juce::FlexBox noiseBox;
-    noiseBox.flexWrap = juce::FlexBox::Wrap::noWrap;
+    noiseBox.flexWrap = juce::FlexBox::Wrap::wrap;
     noiseBox.justifyContent = juce::FlexBox::JustifyContent::spaceBetween;
 
-    noiseBox.items.add(juce::FlexItem(noiseLevelSlider).withMinHeight(50.0f).withMinWidth(50.0f).withFlex(1));
-    noiseBox.items.add(juce::FlexItem(delaySlider).withMinHeight(50.0f).withMinWidth(50.0f).withFlex(1));
+    noiseBox.items.add(juce::FlexItem(noiseLevelSlider).withMinHeight(50.0f).withMinWidth(300.0f).withFlex(1));
+    noiseBox.items.add(juce::FlexItem(delaySlider).withMinHeight(50.0f).withMinWidth(300.0f).withFlex(1));
+    noiseBox.items.add(juce::FlexItem(combFreqSlider).withMinHeight(50.0f).withMinWidth(300.0f).withFlex(1));
     bounds = bounds.removeFromBottom(bounds.getHeight() / 2);
     noiseBox.performLayout(bounds);
 

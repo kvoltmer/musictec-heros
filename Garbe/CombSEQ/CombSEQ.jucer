@@ -9,6 +9,10 @@
             file="Source/DelayMultiProcessor.cpp"/>
       <FILE id="y88occ" name="DelayMultiProcessor.h" compile="0" resource="0"
             file="Source/DelayMultiProcessor.h"/>
+      <FILE id="tI7C8j" name="CombFilterProcessor.cpp" compile="1" resource="0"
+            file="Source/CombFilterProcessor.cpp"/>
+      <FILE id="zE28pO" name="CombFilterProcessor.h" compile="0" resource="0"
+            file="Source/CombFilterProcessor.h"/>
       <FILE id="P4xECi" name="SinePulse.h" compile="0" resource="0" file="Source/SinePulse.h"/>
       <FILE id="XFXrh6" name="SinePulse.cpp" compile="1" resource="0" file="Source/SinePulse.cpp"/>
       <FILE id="MtQptR" name="DelayMonoProcessor.cpp" compile="1" resource="0"

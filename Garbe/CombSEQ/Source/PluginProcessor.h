@@ -12,6 +12,7 @@
 #include "PluginEditor.h"
 #include "SinePulse.h"
 #include "DelayMonoProcessor.h"
+#include "CombFilterProcessor.h"
 
 
 //==============================================================================
@@ -68,8 +69,11 @@ private:
 
     std::atomic<float>* delayParameter = nullptr;
 
+    std::atomic<float>* combFreqParameter = nullptr;
+
     std::unique_ptr<SinePulse> sinePulse;
     std::unique_ptr<DelayMonoProcessor> delayProcessor;
+    std::unique_ptr<CombFilterProcessor> combProcessor;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CombSEQAudioProcessor)
 };

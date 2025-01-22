@@ -32,32 +32,35 @@ DelayMonoProcessor::DelayMonoProcessor()
 float DelayMonoProcessor::process(float in) {
     auto bufferSize = _delayLine->getNumSamples();
     auto buffPointer = _delayLine->getWritePointer(0);
-    buffPointer[_sampleCounter] = in;
-
-    if (_sampleCounter >= bufferSize) {
-        _sampleCounter = 0;
-    }
+    buffPointer[_writePosition] = in;
     
     // Linear smoothing
-    _delay += _smoothingRate * (_targetDelay - _delay);
+    //_delay += _smoothingRate * (_targetDelay - _delay);
+    _delay = _targetDelay;
 
-    float readPosition = _sampleCounter + bufferSize - _delay;
-    if (readPosition >= bufferSize) {
-        readPosition -= bufferSize;
-    }
+    float readPosition = static_cast<float>(_writePosition) + bufferSize - _delay;
 
     int readPosInt = static_cast<int>(readPosition);
     float frac = readPosition - readPosInt;
 
-    float y0 = buffPointer[(readPosInt - 1 + bufferSize) % bufferSize];
-    float y1 = buffPointer[readPosInt];
-    float y2 = buffPointer[(readPosInt + 1) % bufferSize];
-    float y3 = buffPointer[(readPosInt + 2) % bufferSize];
+    int i0 = (readPosInt - 2 + bufferSize) % bufferSize;
+    int i1 = (readPosInt - 1 + bufferSize) % bufferSize;
+    int i2 = readPosInt % bufferSize;
+    int i3 = (readPosInt + 1 + bufferSize) % bufferSize;
+
+    float y0 = buffPointer[i0];
+    float y1 = buffPointer[i1];
+    float y2 = buffPointer[i2];
+    float y3 = buffPointer[i3];
 
     // Perform cubic interpolation
     float delayedValue = cubicInterp(frac, y0, y1, y2, y3);
 
-    _sampleCounter++;
+    _writePosition++;
+
+    if (_writePosition >= bufferSize) {
+        _writePosition -= bufferSize;
+    }
 
     return delayedValue;
 }
@@ -85,5 +88,5 @@ void DelayMonoProcessor::setDelay(float newDelayMs) {
     }
 
 
-    _targetDelay = (newDelayMs / 1000) * _sampleRate;
+    _targetDelay = newDelayMs * 0.001 * _sampleRate;
 }

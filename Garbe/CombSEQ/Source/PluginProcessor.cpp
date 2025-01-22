@@ -14,21 +14,29 @@
 juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
 
-    auto paramNoiseLevel = std::make_unique<juce::AudioParameterFloat>("noiseLevel",            // parameterID
-                                                                       "NoiseLevel",            // parameter name
-                                                                       0.0f,                    // minimum value
-                                                                       1.0f,                    // maximum value
-                                                                       1.0f);                   // default value
+    auto paramNoiseLevel = std::make_unique<juce::AudioParameterFloat>( "noiseLevel",           // parameterID
+                                                                        "NoiseLevel",           // parameter name
+                                                                        0.0f,                   // minimum value
+                                                                        1.0f,                   // maximum value
+                                                                        1.0f);                  // default value
 
     params.push_back(std::move(paramNoiseLevel));
 
-    auto paramDelay = std::make_unique<juce::AudioParameterFloat>("delay",                      // parameterID
+    auto paramDelay = std::make_unique<juce::AudioParameterFloat>(      "delay",                // parameterID
                                                                         "Delay",                // parameter name
                                                                         0.0f,                   // minimum value
-                                                                        500.0f,                   // maximum value
+                                                                        500.0f,                 // maximum value
                                                                         0.0f);                  // default value
 
     params.push_back(std::move(paramDelay));
+
+    auto paramCombFreq = std::make_unique<juce::AudioParameterFloat>(   "combFreq",             // parameterID
+                                                                        "CombFreq",             // parameter name
+                                                                        0.0f,                   // minimum value
+                                                                        20000.0f,                 // maximum value
+                                                                        100.0f);                  // default value
+
+    params.push_back(std::move(paramCombFreq));
 
     return { params.begin(), params.end() };
 }
@@ -50,9 +58,13 @@ state(*this, nullptr, juce::Identifier("PARAMS"), createParameterLayout())
 {
     noiseLevelParameter = state.getRawParameterValue("noiseLevel");
     delayParameter = state.getRawParameterValue("delay");
+    combFreqParameter = state.getRawParameterValue("combFreq");
 
     sinePulse = std::make_unique<SinePulse> (500.f, 2000) ;
     delayProcessor = std::make_unique<DelayMonoProcessor> ();
+    combProcessor = std::make_unique<CombFilterProcessor> ();
+
+    auto channelCount = getTotalNumOutputChannels();
 
 
 }
@@ -133,6 +145,9 @@ void CombSEQAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
     delayProcessor->prepareToPlay(sampleRate, samplesPerBlock);
     delayProcessor->setDelay(*delayParameter);
 
+    combProcessor->prepareToPlay(sampleRate, samplesPerBlock);
+    combProcessor->setFrequency(500);
+
 }
 
 void CombSEQAudioProcessor::releaseResources()
@@ -178,20 +193,22 @@ void CombSEQAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 
     // TODO: Listener?
     delayProcessor->setDelay(*delayParameter);
+    combProcessor->setFrequency(*combFreqParameter);
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
 
         for (size_t sample = 0; sample < buffer.getNumSamples(); sample++) {
-            float data = sinePulse->gen();
-            channelData[sample] = delayProcessor->process(data) * level;
+            channelData[sample] = sinePulse->gen();
         }
 
-        /*
-        for (size_t sample = 0; sample < buffer.getNumSamples(); sample++) {
+        
+        /*for (size_t sample = 0; sample < buffer.getNumSamples(); sample++) {
             channelData[sample] = random.nextFloat() * levelScale - level;
         }*/
+
+        combProcessor->processBlock(buffer, midiMessages);
     }
 }
 

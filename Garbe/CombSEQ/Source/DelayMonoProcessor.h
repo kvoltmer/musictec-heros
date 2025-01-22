@@ -27,7 +27,7 @@ public:
 private:
     std::unique_ptr <juce::AudioBuffer<float>> _delayLine;
 
-    int _sampleCounter = 0;
+    int _writePosition = 0;
     float _delay = 0;
     float _maxDelayMs = 2000.0f;
 

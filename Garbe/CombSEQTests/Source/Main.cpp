@@ -7,7 +7,8 @@
 */
 
 #include <JuceHeader.h>
-#include "DelayProcessor.h"
+#include "DelayMonoProcessor.h"
+#include "DelayMultiProcessor.h"
 #include "SinePulse.h"
 
 using namespace juce;
@@ -28,37 +29,48 @@ int main (int argc, char* argv[])
         const StringPairArray metadata;
         WavAudioFormat wav;
         std::unique_ptr<AudioFormatWriter> writer(wav.createWriterFor(outStream.release(), samplerate,
-            (unsigned int)1,
+            (unsigned int)2,
             24,
             metadata, 0));
         if (writer != nullptr) {
 
-            AudioBuffer<float> temp(1, 512);
-            temp.clear();
+            AudioBuffer<float> monoBuffer(1, 512);
+            monoBuffer.clear();
+
+            AudioBuffer<float> stereoBuffer(2, 512);
+            stereoBuffer.clear();
+
 
             SinePulse sin(440.f, 500);
             sin.prepareToPlay(samplerate, buffersize);
 
-            DelayProcessor del;
-            del.prepareToPlay(samplerate, buffersize);
-            del.setDelay(50);
+            DelayMultiProcessor delay = DelayMultiProcessor(2);
+            delay.prepareToPlay(samplerate, buffersize);
+            delay.setDelay(0, 10);
+            delay.setDelay(1, 250);
 
             double seconds = 10;
             int sampleCount = seconds * samplerate;
             int iterations = sampleCount / buffersize;
 
-            auto ptr = temp.getWritePointer(0);
+            auto ptr = monoBuffer.getWritePointer(0);
 
             for (auto i = 0; i < iterations; i++) {
-                temp.clear();
+                monoBuffer.clear();
 
                 for (auto s = 0; s < buffersize; s++){
-                    auto in = sin.gen();
-                    auto out = del.process(in);
-                    ptr[s] = out;
+                    ptr[s] = sin.gen();
                 }
 
-                writer->writeFromAudioSampleBuffer(temp, 0, buffersize);
+                auto monoReadPointer = monoBuffer.getReadPointer(0);
+
+                std::memcpy(stereoBuffer.getWritePointer(0), monoReadPointer, buffersize * sizeof(float));
+                std::memcpy(stereoBuffer.getWritePointer(1), monoReadPointer, buffersize * sizeof(float));
+                
+                juce::MidiBuffer dummy;
+                delay.processBlock(stereoBuffer, dummy);
+
+                writer->writeFromAudioSampleBuffer(stereoBuffer, 0, buffersize);
             }
 
             writer.reset();
