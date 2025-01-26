@@ -194,22 +194,23 @@ void CombSEQAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
     // TODO: Listener?
     delayProcessor->setDelay(*delayParameter);
     combProcessor->setFrequency(*combFreqParameter);
-
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
-
-        for (size_t sample = 0; sample < buffer.getNumSamples(); sample++) {
-            channelData[sample] = sinePulse->gen();
-        }
-
-        
-        /*for (size_t sample = 0; sample < buffer.getNumSamples(); sample++) {
-            channelData[sample] = random.nextFloat() * levelScale - level;
-        }*/
-
-        combProcessor->processBlock(buffer, midiMessages);
+    
+    // sine pulse -> mono buffer
+    juce::AudioBuffer<float> sineBuffer(1, buffer.getNumSamples());
+    auto sineBufferWritePtr = sineBuffer.getWritePointer(0);
+    for (auto sample = 0; sample < sineBuffer.getNumSamples(); ++sample) {
+        sineBufferWritePtr[sample] = sinePulse->gen();
     }
+    
+    // fake input: copy sine pulse -> input channels
+    for (int channel = 0; channel < totalNumInputChannels; ++channel) {
+        memcpy(buffer.getWritePointer (channel),
+               sineBuffer.getReadPointer(0),
+               sizeof(float) * buffer.getNumSamples());
+    }
+    
+    // currently mono only
+    combProcessor->processBlock(buffer, midiMessages);
 }
 
 //==============================================================================
