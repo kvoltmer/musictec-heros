@@ -5,6 +5,20 @@
               pluginVST3Category="Filter">
   <MAINGROUP id="KTyc9D" name="CombSEQ">
     <GROUP id="{0CFC1C0B-26A0-3F77-1799-4D9B3C4AD8DA}" name="Source">
+      <FILE id="WkeRxy" name="DelayMultiProcessor.cpp" compile="1" resource="0"
+            file="Source/DelayMultiProcessor.cpp"/>
+      <FILE id="y88occ" name="DelayMultiProcessor.h" compile="0" resource="0"
+            file="Source/DelayMultiProcessor.h"/>
+      <FILE id="tI7C8j" name="CombFilterProcessor.cpp" compile="1" resource="0"
+            file="Source/CombFilterProcessor.cpp"/>
+      <FILE id="zE28pO" name="CombFilterProcessor.h" compile="0" resource="0"
+            file="Source/CombFilterProcessor.h"/>
+      <FILE id="P4xECi" name="SinePulse.h" compile="0" resource="0" file="Source/SinePulse.h"/>
+      <FILE id="XFXrh6" name="SinePulse.cpp" compile="1" resource="0" file="Source/SinePulse.cpp"/>
+      <FILE id="MtQptR" name="DelayMonoProcessor.cpp" compile="1" resource="0"
+            file="Source/DelayMonoProcessor.cpp"/>
+      <FILE id="KuRwHL" name="DelayMonoProcessor.h" compile="0" resource="0"
+            file="Source/DelayMonoProcessor.h"/>
       <FILE id="EypsMR" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="GCyqSh" name="PluginProcessor.h" compile="0" resource="0"

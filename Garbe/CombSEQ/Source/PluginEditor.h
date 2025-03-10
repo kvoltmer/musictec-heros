@@ -33,6 +33,16 @@ private:
     juce::Label noiseLevelLabel;
     std::unique_ptr<SliderAttachment> noiseLevelAttachement;
 
+    juce::Slider delaySlider;
+    juce::Label delayLabel;
+    std::unique_ptr<SliderAttachment> delayAttachement;
+
+    juce::Slider combFreqSlider;
+    juce::Label combFreqLabel;
+    std::unique_ptr<SliderAttachment> combFreqAttachement;
+
+    juce::OwnedArray<juce::Slider> sliders;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CombSEQAudioProcessorEditor)
 };
