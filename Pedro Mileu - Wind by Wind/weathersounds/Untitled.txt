@@ -1,0 +1,50 @@
+{
+	"coord" : 	{
+		"lon" : -106.001999999999995,
+		"lat" : 39.224699999999999
+	}
+,
+	"weather" : [ 		{
+			"id" : 804,
+			"main" : "Clouds",
+			"description" : "overcast clouds",
+			"icon" : "04n"
+		}
+ ],
+	"base" : "stations",
+	"main" : 	{
+		"temp" : -21.760000000000002,
+		"feels_like" : -21.760000000000002,
+		"temp_min" : -23.129999999999999,
+		"temp_max" : -21.760000000000002,
+		"pressure" : 1031,
+		"humidity" : 80,
+		"sea_level" : 1031,
+		"grnd_level" : 680
+	}
+,
+	"visibility" : 428,
+	"wind" : 	{
+		"speed" : 1.22,
+		"deg" : 208,
+		"gust" : 1.99
+	}
+,
+	"clouds" : 	{
+		"all" : 100
+	}
+,
+	"dt" : 1737374739,
+	"sys" : 	{
+		"type" : 2,
+		"id" : 2006243,
+		"country" : "US",
+		"sunrise" : 1737382763,
+		"sunset" : 1737418231
+	}
+,
+	"timezone" : -25200,
+	"id" : 5421506,
+	"name" : "Fairplay",
+	"cod" : 200
+}
